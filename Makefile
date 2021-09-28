@@ -6,7 +6,7 @@
 #    By: sangcpar <sangcpar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/09/26 22:48:03 by sangcpar          #+#    #+#              #
-#    Updated: 2021/09/26 22:48:04 by sangcpar         ###   ########.fr        #
+#    Updated: 2021/09/28 19:43:33 by sangcpar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ LIBFT = ./libft/libft.a
 LIBINC = ./libft/
 
 # Optimization and Compiler flags and commands
-CC = gcc -g
+CC = gcc
 CFLAGS = -Wall -Werror -Wextra
 
 # Debugging flags
