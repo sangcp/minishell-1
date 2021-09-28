@@ -15,7 +15,9 @@ typedef struct s_ef{
 }				t_ef;
 
 char **cmd_export(char *cmd, char **envp);
+int cmd_env(char *cmd, char **envp);
 char **plus_line(char **env, char *new_env);
+int    print_export(char *str, char **envp);
 
 char	**ft_split2(char *s, char c);
 size_t	ft_strlcpy_new_str1(char *dst, char const *src, size_t size);
@@ -28,4 +30,6 @@ void	plus_i(char *str, t_ef *ef);
 void	plus_row(char *str, t_ef *ef, char c);
 void	ef_init(t_ef *ef);
 
+void path_free(char **str);
+int is_quotes(char c);
 #endif

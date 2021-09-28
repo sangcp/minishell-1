@@ -3,14 +3,14 @@
 
 //===========****===========****===========****===========****===========****===========****===========****===========****===========****===========****===========****//
 
-char		*get_path(char **envp)
+char		*get_env(char **envp, char *option)
 {
 	int		i;
 	int		j;
 	char	find[5];
 
 	i = 0;
-	ft_strlcpy(find, "PATH", 5);
+	ft_strlcpy(find, option, 5);
 	while (envp[i])
 	{
 		j = 0;
@@ -41,35 +41,83 @@ void get_cmd(char **cmd)
 	get_next_line(1, cmd);
 }
 
-int cmd_cd(char *cmd)
+char	*get_path(char **strs)
+{
+	if (!strs[1][1])
+		return ("");
+	else
+		return (strs[1] + 1);
+}
+
+int cmd_cd(char *cmd, char **envp)
 {
 	char **strs;
 
 	strs = ft_split(cmd, ' ');
-	chdir(strs[1]);
+	if (strs[1][0] == '~')
+	{
+		if ((chdir(ft_strjoin(get_env(envp, "HOME"), get_path(strs)))) == -1)
+			ft_putstr_fd("cd fail\n", 2);
+		return (0);
+	}
+	if ((chdir(strs[1])) == -1)
+		ft_putstr_fd("cd fail\n", 2);
+	path_free(strs);
+	return (0);
+}
+
+void		print_echo(char **str, int i)
+{
+	int		starts_qu;
+	int		ends_qu;
+	int		len;
+
+	starts_qu = is_quotes(str[i][0]);
+	len = (int)ft_strlen(str[i]);
+	ends_qu = is_quotes(str[i][len - 1]);
+	if (ends_qu && starts_qu)
+		ft_putnstr(str[i] + 1, -1);
+	else if (ends_qu)
+		ft_putnstr(str[i], -1);
+	else if (starts_qu)
+		ft_putstr_fd(str[i] + 1, 1);
+	else
+		ft_putstr_fd(str[i], 1);
+	if (str[i + 1])
+		ft_putchar_fd(' ', 1);
+}
+
+int cmd_echo(char *cmd, char **envp)
+{
+	int n_flag;
+	char **command;
+	int i;
+
+	i = 1;
+	command = ft_split2(cmd, ' ');
+	if (!command[1])
+	{
+		ft_putchar_fd('\n', 1);
+		return (0);
+	}
+	n_flag = 0;
+    if (command[1][0] == '$')
+        return(print_export(command[1], envp));
+	if (command[1][0] == '-' && command[1][1] == 'n' && command[1][2] == '\0')
+		n_flag = 1;
+	if (n_flag)
+		i++;
+	while (command[i])
+	{
+		print_echo(command, i);
+		if (!n_flag && !command[i + 1])
+			ft_putchar_fd('\n', 1);
+		i++;
+	}
+	path_free(command);
 	return (0);
 }
 //==============*==============*==============*==============*==============*==============*==============*==============*==============*//
-char **plus_line(char **env, char *new_env)
-{
-    char **envp;
-    int i;
-
-    //printf("[%s]\n", new_env);
-    i = 0;
-    while(env[i])
-        i++;
-    envp = (char **)malloc(sizeof(char **) * (i + 1));
-    i = 0;
-    while (env[i])
-    {
-        envp[i] = env[i];
-        i++;
-    }
-    envp[i] = new_env;
-   // printf("[envp[i]= %s]\n", envp[i]);
-    return (envp);
-}
 
 //==============*==============*==============*==============*==============*==============*==============*==============*==============*//
 
@@ -84,18 +132,24 @@ int run_cmd(char *cmd, char ***envp)
 	if (!(ft_strcmp(cmd, "exit")))
 		return (-1);
 	if (!(ft_strncmp(cmd, "cd", 2)))
-		return (cmd_cd(cmd));
+		return (cmd_cd(cmd, *envp));
+	if (!(ft_strncmp(cmd, "echo", 4)))
+		return (cmd_echo((cmd), *envp));
     if (!(ft_strncmp(cmd, "export", 5)))
     {
         *envp = cmd_export(cmd, *envp);
         return (0);
     }
+    if (!(ft_strncmp(cmd, "env", 3)))
+        return (cmd_env(cmd, *envp));
 	pid = fork();
 	i = 0;
 	if (pid == 0)
 	{
-		path = ft_split2(get_path(*envp), ':');
+		path = ft_split2(get_env(*envp, "PATH"), ':');
 		strs = ft_split2(cmd, ' ');
+		if (!ft_strncmp(*strs, "/bin/", 5))
+			*strs = *strs + 5;
 		while (path[i])
 		{
 			tmp = ft_strjoin(path[i], "/");
@@ -110,6 +164,8 @@ int run_cmd(char *cmd, char ***envp)
 		ft_putstr_fd("pipex: command not found : ", STDERR_FILENO);
 		ft_putstr_fd(cmd, STDERR_FILENO);
 		write(STDERR_FILENO, "\n", 1);
+		path_free(path);
+		path_free(strs);
 		return (-1);
 	}
 	wait(&pid);
@@ -131,5 +187,7 @@ int main(int ac, char **av, char **envp)
 		i = run_cmd(cmd, &envp);
 		if (i == -1)
 			break ;
+		free(cmd);
 	}
+	system("leaks minishell");
 }
