@@ -33,22 +33,12 @@ void terminal_msg()
 	ft_putstr_fd(" $ ", 1);
 }
 
-void	exit_shell(void)
-{
-	write(1, "\n", 1);
-	exit(0);
-}
-
 void get_cmd(char **cmd)
 {
 	int i;
 
 	i = 0;
-	if (get_next_line(1, cmd) == -1)
-	{
-		ft_putstr_fd("\b   \b\bexit", 1);
-		exit_shell();
-	}
+	get_next_line(1, cmd);
 }
 
 char	*get_path(char **strs)
@@ -153,8 +143,6 @@ int run_cmd(char *cmd, char ***envp)
     if (!(ft_strncmp(cmd, "env", 3)))
         return (cmd_env(cmd, *envp));
 	pid = fork();
-	signal(SIGINT, sighandler2);
-	signal(SIGQUIT, pipe_sighandler2);
 	i = 0;
 	if (pid == 0)
 	{
@@ -195,12 +183,11 @@ int main(int ac, char **av, char **envp)
 	while (1)
 	{
 		terminal_msg();
-		signal(SIGINT, sighandler1);
-		signal(SIGQUIT, pipe_sighandler1);
 		get_cmd(&cmd);
 		i = run_cmd(cmd, &envp);
 		if (i == -1)
 			break ;
 		free(cmd);
 	}
+	system("leaks minishell");
 }
