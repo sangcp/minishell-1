@@ -18,6 +18,7 @@
 # include <unistd.h>
 # include "get_next_line.h"
 
+void				ft_putnstr(char *str, int n);
 void				ft_putnbr_fd(int n, int fd);
 void				ft_putendl_fd(char *s, int fd);
 void				ft_putstr_fd(char *s, int fd);
@@ -42,7 +43,7 @@ size_t				ft_strlcat(char *dest, const char *src, size_t destsize);
 char				*ft_strchr(const char *s, int c);
 char				*ft_strrchr(const char *s, int c);
 char				*ft_strnstr(const char *big,
-		const char *little, size_t len);
+const char *little, size_t len);
 int					ft_strcmp(const char *s1, const char *s2);
 int					ft_strncmp(const char *s1, const char *s2, size_t n);
 int					ft_atoi(const char *str);
@@ -62,11 +63,14 @@ void				ft_strdel(char **as);
 char				*ft_strsub(char const *s, unsigned int start, size_t len);
 size_t				ft_lentoc(char *str, char c);
 
-char                **ft_split2(char *s, char c);
+char	**ft_split2(char *s, char c);
 int	check_row(char *str, char c);
 int	find_new_column(const char *str);
 char	**malloc_free(char **new_str);
 size_t	find_column(char const *s, char c);
 size_t	ft_strlcpy_new_str1(char *dst, char const *src, size_t size);
+
+void	*ft_memalloc(size_t size);
+void	*ft_realloc(void *ptr, size_t prev_size, size_t new_size);
 
 #endif
