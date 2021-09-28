@@ -7,12 +7,17 @@
 # include <string.h>
 # include <unistd.h>
 # include <errno.h>
+# include <signal.h>
+# include <termios.h>
 # include "libft/libft.h"
 
 typedef struct s_ef{
 	size_t	row;
 	size_t	i;
 }				t_ef;
+
+//---- main.c ---//
+void terminal_msg();
 
 char **cmd_export(char *cmd, char **envp);
 int cmd_env(char *cmd, char **envp);
@@ -32,4 +37,16 @@ void	ef_init(t_ef *ef);
 
 void path_free(char **str);
 int is_quotes(char c);
+
+// ------ signal.c -----//
+
+struct termios org_term;
+struct termios new_term;
+
+void sighandler1(int sig);
+void sighandler2(int sig);
+void pipe_sighandler1(int sig);
+void pipe_sighandler2(int sig);
+void eof_sighandler1(int sig);
+
 #endif
