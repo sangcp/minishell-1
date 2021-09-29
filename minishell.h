@@ -40,13 +40,9 @@ int is_quotes(char c);
 
 // ------ signal.c -----//
 
-struct termios org_term;
-struct termios new_term;
-
 void sighandler1(int sig);
 void sighandler2(int sig);
 void pipe_sighandler1(int sig);
 void pipe_sighandler2(int sig);
-void eof_sighandler1(int sig);
 
 #endif
