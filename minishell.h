@@ -3,6 +3,8 @@
 
 # include <stdio.h>
 # include <fcntl.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
@@ -19,6 +21,7 @@ typedef struct s_ef{
 //---- main.c ---//
 void terminal_msg();
 char		*get_env(char **envp, char *option);
+void get_cmd(char **cmd);
 
 char **cmd_export(char *cmd, char **envp);
 int cmd_env(char *cmd, char **envp);

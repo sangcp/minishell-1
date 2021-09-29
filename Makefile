@@ -29,6 +29,7 @@ LIBINC = ./libft/
 # Optimization and Compiler flags and commands
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra
+READ = -lreadline
 
 # Debugging flags
 DEBUG = -g
@@ -46,7 +47,7 @@ $(BUILDDIR)%.o:$(SRCDIR)%.c
 
 # Project file rule
 $(NAME): $(BUILDOBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(BUILDOBJS) $(LIBFT)
+	$(CC) $(CFLAGS) -o $(NAME) $(BUILDOBJS) $(LIBFT) $(READ)
 
 # Libft rule
 $(LIBFT):

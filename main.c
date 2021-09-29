@@ -44,9 +44,17 @@ void get_cmd(char **cmd)
 	int i;
 
 	i = 0;
-	if (get_next_line(1, cmd) == -1)
+	/*if (get_next_line(1, cmd) == -1)
 	{
 		ft_putstr_fd("\b   \b\bexit", 1);
+		exit_shell();
+	}*/
+	*cmd = readline(" ]> $ ");
+	if (!(*cmd))
+	{
+		printf("\x1b[1A");
+		printf("\x1b[6C");
+		printf("exit"); //\x1b1A 15C
 		exit_shell();
 	}
 }
@@ -196,13 +204,14 @@ int main(int ac, char **av, char **envp)
 	(void)ac;
 	while (1)
 	{
-		terminal_msg();
-		signal(SIGINT, sighandler1);
-		signal(SIGQUIT, pipe_sighandler1);
+		//terminal_msg();
+		signal(SIGINT, &sighandler1);
+		signal(SIGQUIT, &pipe_sighandler1);
 		get_cmd(&cmd);
 		i = run_cmd(cmd, &envp);
 		if (i == -1)
 			break ;
+		add_history(cmd);
 		free(cmd);
 	}
 }

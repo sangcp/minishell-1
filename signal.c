@@ -3,7 +3,7 @@
 void pipe_sighandler1(int sig)
 {
 	if (sig == SIGQUIT)
-		ft_putstr_fd("\b\b  \b\b", 1);
+		ft_putstr_fd("", 1);
 }
 
 void pipe_sighandler2(int sig)
@@ -11,7 +11,7 @@ void pipe_sighandler2(int sig)
 	if (sig == SIGQUIT)
 	{
 		ft_putstr_fd("Quit: 3\n", 1);
-		signal(SIGQUIT, sighandler2);
+		signal(SIGQUIT, &sighandler2);
 	}
 }
 
@@ -19,9 +19,10 @@ void sighandler1(int sig)
 {
 	if (sig == SIGINT)
 	{
-		ft_putstr_fd("\b\b  \b\b\n", 1);
-		terminal_msg();
-		signal(SIGINT, sighandler1);
+		ft_putstr_fd("\n", 1); //\x1b1A 15C
+		//terminal_msg();
+		rl_redisplay();
+		//signal(SIGINT, &sighandler1);
 	}
 }
 
@@ -30,6 +31,6 @@ void sighandler2(int sig)
 	if (sig == SIGINT)
 	{
 		ft_putchar_fd('\n', 1);
-		signal(SIGINT, sighandler2);
+		signal(SIGINT, &sighandler2);
 	}
 }

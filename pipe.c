@@ -40,7 +40,7 @@ void		get_cmd_pipe(char *av, char **envp)
 	char	**strs;
 	int		i;
 
-	path = ft_split(get_path1(envp), ':');
+	path = ft_split(get_env(envp, "PATH"), ':');
 	strs = ft_split(av, ' ');
 	i = 0;
 	while (path[i])
@@ -70,7 +70,7 @@ int cmd_pipe(char *cmd, char **envp)
 	pid_t	pid;
 
 	pipe(pipefd);
-	command = ft_split2(cmd, ' ');
+	command = ft_split(cmd, ' ');
 	if ((pid = fork()) == 0)
 	{
 		close(pipefd[0]);
