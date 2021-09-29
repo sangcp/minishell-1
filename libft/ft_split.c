@@ -30,7 +30,6 @@ unsigned int		ft_strcount(char const *s, char c)
 {
 	unsigned int	i;
 	unsigned int	nb_strs;
-	char q;
 
 	if (!s[0])
 		return (0);
@@ -40,13 +39,6 @@ unsigned int		ft_strcount(char const *s, char c)
 		i++;
 	while (s[i])
 	{
-		if (s[i] == '\'' || s[i] == '\"')
-		{
-			q = s[i];
-			i++;
-			while (s[i] != q)
-				i++;
-		}
 		if (s[i] == c)
 		{
 			nb_strs++;

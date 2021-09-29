@@ -19,7 +19,9 @@ void sighandler1(int sig)
 {
 	if (sig == SIGINT)
 	{
+        ft_putstr_fd("\b\b  ", 2);
 		ft_putstr_fd("\n", 1); //\x1b1A 15C
+        ft_putstr_fd("bash$", 1);
 		//terminal_msg();
 		rl_redisplay();
 		//signal(SIGINT, &sighandler1);

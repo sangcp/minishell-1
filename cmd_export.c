@@ -40,7 +40,7 @@ char **plus_line(char **env, char *new_env)
     i = 0;
     while(env[i])
         i++;
-    envp = (char **)malloc(sizeof(char **) * (i + 1));
+    envp = (char **)malloc(sizeof(char *) * (i + 1));
     i = 0;
     while (env[i])
     {
@@ -49,6 +49,28 @@ char **plus_line(char **env, char *new_env)
     }
     envp[i] = new_change_env;
     return (envp);
+}
+
+int check_equal_len(char *str)
+{
+    int i;
+
+    i = 0;
+    while (str[i] != '=')
+        i++;
+    return (i);
+}
+
+int swap_envp(char *str1, char *str2)
+{
+    int i;
+
+    i = 0;
+    while (str1[i] == str2[i])
+        i++;
+    if (str1[i] > str2[i])
+        return (1);
+    return (0);
 }
 
 char **desending_envp(char **envp)
@@ -71,10 +93,10 @@ char **desending_envp(char **envp)
     i = 0;
     while (desen_envp[i])
     {
-        j = 0;
+        j = i + 1;
         while (desen_envp[j])
         {
-            if (desen_envp[i] > desen_envp[j])
+            if (swap_envp(desen_envp[i], desen_envp[j]))
             {
                 tmp = desen_envp[i];
                 desen_envp[i] = desen_envp[j];
@@ -84,12 +106,7 @@ char **desending_envp(char **envp)
         }
         i++;
     }
-    i = 0;
-    while (desen_envp[i])
-    {
-        printf("[%s]\n", desen_envp[i]);
-        i++;
-    }
+
     return (desen_envp);
 }
 
@@ -97,16 +114,16 @@ char **cmd_export(char *cmd, char **envp)
 {
     int i;
     char **path;
-    char **desen_envp;
+    //char **desen_envp;
 
-    desen_envp = desending_envp(envp);
+    //desen_envp = desending_envp(envp);
     path = ft_split2(cmd, ' ');
     if (!(ft_strcmp(cmd, "export")))
     {
         i = 0;
-        while (desen_envp[i])
+        while (envp[i])
         {
-            printf("declare -x %s\n",desen_envp[i]);
+            printf("declare -x %s\n",envp[i]);
             i++;
         }
     }

@@ -49,7 +49,7 @@ void get_cmd(char **cmd)
 		ft_putstr_fd("\b   \b\bexit", 1);
 		exit_shell();
 	}*/
-	*cmd = readline(" ]> $ ");
+	*cmd = readline("bash-3.2$");
 	if (!(*cmd))
 	{
 		printf("\x1b[1A");
