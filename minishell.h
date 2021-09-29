@@ -18,6 +18,7 @@ typedef struct s_ef{
 
 //---- main.c ---//
 void terminal_msg();
+char		*get_env(char **envp, char *option);
 
 char **cmd_export(char *cmd, char **envp);
 int cmd_env(char *cmd, char **envp);
@@ -44,5 +45,10 @@ void sighandler1(int sig);
 void sighandler2(int sig);
 void pipe_sighandler1(int sig);
 void pipe_sighandler2(int sig);
+
+// ----- pipe.c ------ //
+
+int cmd_pipe(char *cmd, char **envp);
+
 
 #endif

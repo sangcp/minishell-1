@@ -152,6 +152,8 @@ int run_cmd(char *cmd, char ***envp)
     }
     if (!(ft_strncmp(cmd, "env", 3)))
         return (cmd_env(cmd, *envp));
+	if (ft_strchr(cmd, '|'))
+		return (cmd_pipe(cmd, *envp));
 	pid = fork();
 	signal(SIGINT, sighandler2);
 	signal(SIGQUIT, pipe_sighandler2);
