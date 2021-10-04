@@ -18,6 +18,33 @@ typedef struct s_ef{
 	size_t	i;
 }				t_ef;
 
+// ---
+
+typedef struct s_ops
+{
+	char			*operation;
+	char			**args;
+	int				in_quotes;
+	int				rv;
+	char			type;
+	int				fds[2];
+	struct s_ops	*next;
+	struct s_ops	*prev;
+}					t_ops;
+
+typedef struct s_shell
+{
+	t_list			*ops;
+	char			**args;
+	char			**evs;
+	int				rv;
+	int				fds[2];
+	int				prev_pipe;
+	int				count;
+	int				stdinp;
+	int				stdout;
+}					t_shell;
+
 //---- main.c ---//
 void terminal_msg();
 char		*get_env(char **envp, char *option);
@@ -53,5 +80,16 @@ void pipe_sighandler2(int sig);
 
 int cmd_pipe(char *cmd, char **envp);
 
+// ----- parse.c ---- //
 
+t_list *parse(t_shell *mini, char *cmd);
+
+// ----- run_cmd.c --- //
+int run_cmd1(t_shell *mini, t_list *list);
+int	shell_execute(t_shell *mini, char **args);
+
+// ----- operator.c ---//
+int	operator_redirect_input(t_list *tlist, t_shell *shell);
+int	operator_append_output(t_list *tlist, t_shell *shell);
+int	operator_redirect_output(t_list *tlist, t_shell *shell);
 #endif

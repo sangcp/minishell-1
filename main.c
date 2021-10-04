@@ -139,7 +139,7 @@ int cmd_echo(char *cmd, char **envp)
 
 //==============*==============*==============*==============*==============*==============*==============*==============*==============*//
 
-int run_cmd(char *cmd, char ***envp)
+int run_cmd(char *cmd, char ***envp)// t_shell *mini, t_list *list)
 {
 	char **path;
 	char **strs;
@@ -198,16 +198,20 @@ int main(int ac, char **av, char **envp)
 {
 	char *cmd;
 	int i;
+	t_shell mini;
+	t_list *list;
 
 	i = 0;
 	(void)av;
 	(void)ac;
+	(void)envp;
 	while (1)
 	{
 		//terminal_msg();
 		signal(SIGINT, &sighandler1);
 		signal(SIGQUIT, &pipe_sighandler1);
 		get_cmd(&cmd);
+		list = parse(&mini, cmd);
 		i = run_cmd(cmd, &envp);
 		if (i == -1)
 			break ;

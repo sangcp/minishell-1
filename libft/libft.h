@@ -18,6 +18,12 @@
 # include <unistd.h>
 # include "get_next_line.h"
 
+typedef struct s_list
+{
+	void			*content;
+	struct s_list	*next;
+}					t_list;
+
 void				ft_putnstr(char *str, int n);
 void				ft_putnbr_fd(int n, int fd);
 void				ft_putendl_fd(char *s, int fd);
@@ -72,5 +78,16 @@ size_t	ft_strlcpy_new_str1(char *dst, char const *src, size_t size);
 
 void	*ft_memalloc(size_t size);
 void	*ft_realloc(void *ptr, size_t prev_size, size_t new_size);
+
+void	ft_lstadd_back(t_list **lst, t_list *new);
+void	ft_lstadd_front(t_list **lst, t_list *new);
+t_list	*ft_lstnew(void *content);
+int		ft_lstsize(t_list *lst);
+void	ft_lstclear(t_list **lst, void (*del)(void *));
+void	ft_lstdelone(t_list *lst, void (*del)(void *));
+void	ft_lstiter(t_list *lst, void (*f)(void *));
+t_list	*ft_lstlast(t_list *lst);
+
+
 
 #endif

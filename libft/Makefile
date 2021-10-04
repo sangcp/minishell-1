@@ -24,7 +24,8 @@ FILES = ft_memset ft_bzero ft_memcpy ft_memccpy ft_memmove ft_memchr \
 		ft_substr ft_strjoin ft_strtrim ft_split ft_itoa ft_strmapi \
 		ft_putchar_fd ft_putstr_fd ft_putendl_fd ft_putnbr_fd ft_strcmp get_next_line \
 		ft_lentoc ft_cleanup ft_strnew ft_strdel ft_strsub ft_putnstr \
-		ft_realloc ft_memalloc
+		ft_realloc ft_memalloc ft_lstnew ft_lstadd_front ft_lstsize ft_lstlast ft_lstadd_back \
+	  	ft_lstdelone ft_lstclear ft_lstiter ft_lstmap
 		
 
 FILES_B = 	ft_lstnew ft_lstadd_front ft_lstsize ft_lstlast ft_lstadd_back \
