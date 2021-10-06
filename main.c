@@ -39,9 +39,10 @@ void	exit_shell(void)
 	exit(0);
 }
 
-void get_cmd(char **cmd)
+char *get_cmd()
 {
 	int i;
+	char *cmd;
 
 	i = 0;
 	/*if (get_next_line(1, cmd) == -1)
@@ -49,7 +50,7 @@ void get_cmd(char **cmd)
 		ft_putstr_fd("\b   \b\bexit", 1);
 		exit_shell();
 	}*/
-	*cmd = readline("bash-3.2$");
+	cmd = readline("bash-3.2$");
 	if (!(*cmd))
 	{
 		printf("\x1b[1A");
@@ -57,6 +58,7 @@ void get_cmd(char **cmd)
 		printf("exit"); //\x1b1A 15C
 		exit_shell();
 	}
+	return (cmd);
 }
 
 char	*get_path(char **strs)
@@ -67,20 +69,17 @@ char	*get_path(char **strs)
 		return (strs[1] + 1);
 }
 
-int cmd_cd(char *cmd, char **envp)
+int cmd_cd(char **args, char **envp)
 {
-	char **strs;
-
-	strs = ft_split(cmd, ' ');
-	if (strs[1][0] == '~')
+	if (args[1][0] == '~')
 	{
-		if ((chdir(ft_strjoin(get_env(envp, "HOME"), get_path(strs)))) == -1)
+		if ((chdir(ft_strjoin(get_env(envp, "HOME"), get_path(args)))) == -1)
 			ft_putstr_fd("cd fail\n", 2);
 		return (0);
 	}
-	if ((chdir(strs[1])) == -1)
+	if ((chdir(args[1])) == -1)
 		ft_putstr_fd("cd fail\n", 2);
-	path_free(strs);
+	path_free(args);
 	return (0);
 }
 
@@ -105,34 +104,31 @@ void		print_echo(char **str, int i)
 		ft_putchar_fd(' ', 1);
 }
 
-int cmd_echo(char *cmd, char **envp)
+int cmd_echo(char **args, char **envp)
 {
 	int n_flag;
-	char **command;
 	int i;
 
 	i = 1;
-	command = ft_split2(cmd, ' ');
-	if (!command[1])
+	if (!args[1])
 	{
 		ft_putchar_fd('\n', 1);
 		return (0);
 	}
 	n_flag = 0;
-    if (command[1][0] == '$')
-        return(print_export(command[1], envp));
-	if (command[1][0] == '-' && command[1][1] == 'n' && command[1][2] == '\0')
+    if (args[1][0] == '$')
+        return(print_export(args[1], envp));
+	if (args[1][0] == '-' && args[1][1] == 'n' && args[1][2] == '\0')
 		n_flag = 1;
 	if (n_flag)
 		i++;
-	while (command[i])
+	while (args[i])
 	{
-		print_echo(command, i);
-		if (!n_flag && !command[i + 1])
+		print_echo(args, i);
+		if (!n_flag && !args[i + 1])
 			ft_putchar_fd('\n', 1);
 		i++;
 	}
-	path_free(command);
 	return (0);
 }
 //==============*==============*==============*==============*==============*==============*==============*==============*==============*//
@@ -150,16 +146,16 @@ int run_cmd(char *cmd, char ***envp)// t_shell *mini, t_list *list)
 	if (!(ft_strcmp(cmd, "exit")))
 		return (-1);
 	if (!(ft_strncmp(cmd, "cd", 2)))
-		return (cmd_cd(cmd, *envp));
+		return (cmd_cd(&cmd, *envp));
 	if (!(ft_strncmp(cmd, "echo", 4)))
-		return (cmd_echo((cmd), *envp));
+		return (cmd_echo((&cmd), *envp));
     if (!(ft_strncmp(cmd, "export", 5)))
     {
-        *envp = cmd_export(cmd, *envp);
+        *envp = cmd_export(&cmd, *envp);
         return (0);
     }
     if (!(ft_strncmp(cmd, "env", 3)))
-        return (cmd_env(cmd, *envp));
+        return (cmd_env(&cmd, *envp));
 	if (ft_strchr(cmd, '|'))
 		return (cmd_pipe(cmd, *envp));
 	pid = fork();
@@ -210,9 +206,10 @@ int main(int ac, char **av, char **envp)
 		//terminal_msg();
 		signal(SIGINT, &sighandler1);
 		signal(SIGQUIT, &pipe_sighandler1);
-		get_cmd(&cmd);
+		cmd = get_cmd();
 		list = parse(&mini, cmd);
-		i = run_cmd(cmd, &envp);
+		//i = run_cmd(cmd, &envp);
+		i = run_cmd1(&mini, list, envp);
 		if (i == -1)
 			break ;
 		add_history(cmd);

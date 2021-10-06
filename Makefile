@@ -27,7 +27,7 @@ LIBFT = ./libft/libft.a
 LIBINC = ./libft/
 
 # Optimization and Compiler flags and commands
-CC = gcc
+CC = gcc -g
 CFLAGS = -Wall -Werror -Wextra
 READ = -lreadline
 

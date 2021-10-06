@@ -45,13 +45,24 @@ typedef struct s_shell
 	int				stdout;
 }					t_shell;
 
+
+typedef struct			s_state
+{
+	int ret;
+	struct termios		term;
+	struct termios		t_sv;
+}						t_state;
+
 //---- main.c ---//
 void terminal_msg();
 char		*get_env(char **envp, char *option);
-void get_cmd(char **cmd);
+char *get_cmd();
 
-char **cmd_export(char *cmd, char **envp);
-int cmd_env(char *cmd, char **envp);
+int cmd_cd(char **args, char **envp);
+int cmd_echo(char **args, char **envp);
+
+char **cmd_export(char **args, char **envp);
+int cmd_env(char **args, char **envp);
 char **plus_line(char **env, char *new_env);
 int    print_export(char *str, char **envp);
 
@@ -85,11 +96,17 @@ int cmd_pipe(char *cmd, char **envp);
 t_list *parse(t_shell *mini, char *cmd);
 
 // ----- run_cmd.c --- //
-int run_cmd1(t_shell *mini, t_list *list);
-int	shell_execute(t_shell *mini, char **args);
+int run_cmd1(t_shell *mini, t_list *list, char **envp);
+int	exec_cmp(t_shell *mini, char **args, char **envp);
 
 // ----- operator.c ---//
-int	operator_redirect_input(t_list *tlist, t_shell *shell);
-int	operator_append_output(t_list *tlist, t_shell *shell);
-int	operator_redirect_output(t_list *tlist, t_shell *shell);
+int	redirect_input(t_list *list, t_shell *shell, char **envp);
+int	append_output(t_list *list, t_shell *shell, char **envp);
+int	redirect_output(t_list *list, t_shell *shell, char **envp);
+int	operator_pipe(t_list *list, t_shell *mini, char **envp);
+
+// ---- term.c ---//
+void	init_term(void);
+void	restore_term(void);
+
 #endif

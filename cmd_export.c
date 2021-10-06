@@ -110,15 +110,13 @@ char **desending_envp(char **envp)
     return (desen_envp);
 }
 
-char **cmd_export(char *cmd, char **envp)
+char **cmd_export(char **args, char **envp)
 {
     int i;
-    char **path;
     //char **desen_envp;
 
     //desen_envp = desending_envp(envp);
-    path = ft_split2(cmd, ' ');
-    if (!(ft_strcmp(cmd, "export")))
+    if (!(ft_strcmp(args[0], "export")))
     {
         i = 0;
         while (envp[i])
@@ -127,7 +125,7 @@ char **cmd_export(char *cmd, char **envp)
             i++;
         }
     }
-    else if (path[1][0] == '$')
+    else if (args[1][0] == '$')
     {
         i = 0;
         while (envp[i])
@@ -137,7 +135,7 @@ char **cmd_export(char *cmd, char **envp)
         }
     }
     else
-        envp = plus_line(envp, path[1]);
+        envp = plus_line(envp, args[1]);
     return (envp);
 }
 

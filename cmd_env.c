@@ -14,14 +14,12 @@ int find_equal(char *cmd)
     return (0);
 }
 
-int cmd_env(char *cmd, char **envp)
+int cmd_env(char **args, char **envp)
 {
-    char **path;
     int i;
 
     i = 0;
-    path = ft_split2(cmd,' ');
-    if (!(ft_strcmp(cmd,"env")))
+    if (!(ft_strcmp(args[0],"env")))
     {
         while (envp[i])
         {
@@ -36,10 +34,10 @@ int cmd_env(char *cmd, char **envp)
             printf("%s\n", envp[i]);
             i++;
         }
-        if (find_equal(path[1]))
-            printf("%s\n",path[1]);
+        if (find_equal(args[1]))
+            printf("%s\n",args[1]);
         else
-            printf("env : %s: No such file or directory\n", path[1]);
+            printf("env : %s: No such file or directory\n", args[1]);
     }
     return (1);
 }
