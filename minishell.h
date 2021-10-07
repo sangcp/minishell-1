@@ -94,6 +94,7 @@ int cmd_pipe(char *cmd, char **envp);
 // ----- parse.c ---- //
 
 t_list *parse(t_shell *mini, char *cmd);
+t_list *parse_option(char *cmd);
 
 // ----- run_cmd.c --- //
 int run_cmd1(t_shell *mini, t_list *list, char **envp);

@@ -45,7 +45,9 @@ char *get_cmd()
 	char *cmd;
 
 	i = 0;
-	/*if (get_next_line(1, cmd) == -1)
+	//cmd = NULL;
+	cmd = NULL;
+	/*if (get_next_line(1, &cmd) == -1)
 	{
 		ft_putstr_fd("\b   \b\bexit", 1);
 		exit_shell();
@@ -190,6 +192,14 @@ int run_cmd(char *cmd, char ***envp)// t_shell *mini, t_list *list)
 	return (0);
 }
 
+void	reset_fds(t_shell *mini)
+{
+	dup2(mini->fds[0], 0);
+	dup2(mini->fds[1], 1);
+	dup2(mini->stdinp, 0);
+	dup2(mini->stdout, 1);
+}
+
 int main(int ac, char **av, char **envp)
 {
 	char *cmd;
@@ -197,7 +207,10 @@ int main(int ac, char **av, char **envp)
 	t_shell mini;
 	t_list *list;
 
+
 	i = 0;
+	mini.fds[0] = dup(STDIN_FILENO);
+	mini.fds[1] = dup(STDOUT_FILENO);
 	(void)av;
 	(void)ac;
 	(void)envp;
@@ -207,12 +220,17 @@ int main(int ac, char **av, char **envp)
 		signal(SIGINT, &sighandler1);
 		signal(SIGQUIT, &pipe_sighandler1);
 		cmd = get_cmd();
-		list = parse(&mini, cmd);
+		//cmd = readline("bash $");
+		//list = parse(&mini, cmd);
+		list = parse_option(cmd);
+		free(cmd);
+		mini.prev_pipe = STDIN_FILENO;
+		mini.count = ft_lstsize(list);
 		//i = run_cmd(cmd, &envp);
 		i = run_cmd1(&mini, list, envp);
+		reset_fds(&mini);
+		add_history(cmd);
 		if (i == -1)
 			break ;
-		add_history(cmd);
-		free(cmd);
 	}
 }

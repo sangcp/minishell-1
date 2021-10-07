@@ -127,9 +127,7 @@ t_list *parse(t_shell *mini, char *cmd)
 {
 	t_list *list;
 
+	(void)mini;
 	list = parse_option(cmd);
-	mini->ops = list;
-	mini->prev_pipe = STDIN_FILENO;
-	mini->count = ft_lstsize(list);
 	return (list);
 }
