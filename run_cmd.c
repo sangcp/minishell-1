@@ -12,6 +12,39 @@
 
 #include "minishell.h"
 
+int append_input(t_list *list, t_shell *mini, char **envp)
+{
+	char **cmd;
+	char *cm;
+	int i;
+	char *exit_c;
+	(void)envp;
+	(void)mini;
+	int fd;
+
+	
+	cmd = (char**)malloc(sizeof(char*) * 99);
+	cmd[0] = ft_strdup(((t_ops *)(list->content))->args[0]);
+	exit_c = ((t_ops *)(list->next->content))->args[0];
+	i = 1;
+	while (1)
+	{
+		cm = readline("heredoc> ");
+		if (!(ft_strcmp(exit_c, cm)))
+			break ;
+		cmd[i] = ft_strdup(cm);
+		printf("%s| %s| %s|\n", cm, cmd[i], exit_c);
+		i++;
+	}
+	((t_ops *)(list->content))->args = cmd;
+	i = 0;
+	fd = open(((t_ops *)(list->content))->args[0], O_RDONLY);
+	while (((t_ops *)(list->content))->args[i])
+		printf("%s\n", ((t_ops *)(list->content))->args[i++]);
+	((t_ops *)(list->content))->type = ' ';
+	mini->count--;
+	return (0);
+}
 int	operator_exec(t_list *list, t_shell *mini, char **envp)
 {
 	if (((t_ops *)(list->content))->type == '|')
@@ -91,6 +124,8 @@ int	exec_cmp(t_shell *mini, char **args, char **envp)
 
 int run_cmd1(t_shell *mini, t_list *list, char **envp)
 {
+	if (((t_ops *)(list->content))->type == '{')
+		append_input(list, mini, envp);
 	while (mini->count > 1)
 	{
 		mini->args = ((t_ops *)(list->content))->args;

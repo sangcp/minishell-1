@@ -90,6 +90,8 @@ t_ops	*set_ops(char *cmd, int i)
 	ops->args = parse_args(ops->operation, ops);
 	if (cmd[i] && cmd[i + 1] == '>')
 		ops->type = '}';
+	else if (cmd[i] && cmd[i + 1] == '<')
+		ops->type = '{';
 	else
 		ops->type = cmd[i];
 	ops->next = NULL;
@@ -115,6 +117,7 @@ t_list *parse_option(char *cmd)
 			if (!cmd[i])
 				return (list);
 			cmd += (cmd[i] && cmd[i + 1] == '>' ?  1 : 0);
+			cmd += (cmd[i] && cmd[i + 1] == '<' ?  1 : 0);
 			cmd += i + 1;
 			i = 0;
 		}

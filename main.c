@@ -46,14 +46,13 @@ char *get_cmd()
 
 	i = 0;
 	//cmd = NULL;
-	cmd = NULL;
 	/*if (get_next_line(1, &cmd) == -1)
 	{
 		ft_putstr_fd("\b   \b\bexit", 1);
 		exit_shell();
 	}*/
 	cmd = readline("bash-3.2$");
-	if (!(*cmd))
+	if (!cmd)
 	{
 		printf("\x1b[1A");
 		printf("\x1b[6C");
